@@ -1,6 +1,10 @@
 <template>
   <div class="login">
-    <h1>This is an login component</h1>
+    <!-- login model -->
+    <div v-if="loginPageVis" class="login-model-wrapper">
+      <input type="text" name="email" placeholder="example@example.com">
+      <input type="password" name="pass" placeholder="password">
+    </div>
   </div>
 </template>
 

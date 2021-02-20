@@ -1,30 +1,75 @@
 <template>
   <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <!-- router links -->
+    <router-link to="/">Home</router-link> | 
+
+    <router-link to="/about">About</router-link> | 
+
+    <div @click="openLogin()" class="nav-login-wrapper">
+      <a>Login <i class="fas fa-user"></i></a>
+    </div>
+
+    <login v-if="loginPageVis" />
+
   </div>
   <router-view />
 </template>
 
+<script>
+import login from '@/components/login'
+
+export default {
+  name: 'app',
+
+  // ! fix login component
+  components: [login],
+  data() {
+    return {
+      loginPageVis: false, 
+    }
+  },
+  methods: {
+    // * function for opening a login model 
+    // ------------------------------------------------------------
+    openLogin() {
+      const body = document.getElementById('body')
+
+      if (this.loginPageVis) {
+        this.loginPageVis = false
+        body.style.backgroundColor = 'white'
+
+      } else {
+        this.loginPageVis = true
+
+        body.style.backgroundColor = 'rgba(0, 0, 0, 0.700)(0, 0, 0)'
+      }
+
+    }
+  }
+}
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+
+  #nav {
+    display: flex;
+  }
+
+  .nav-login-wrapper {
+    cursor: pointer;
+  }
+
+  .nav-login-wrapper a {
+    margin: 0;
+  }
+
+  .login-model-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background: red;
 }
 
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
 </style>
