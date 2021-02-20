@@ -22,7 +22,7 @@ const routes = [
 		component: contact,
 	},
 	{
-		path: '/pruducts',
+		path: '/products',
 		name: 'pruducts',
 		component: productsPage,
 	},
