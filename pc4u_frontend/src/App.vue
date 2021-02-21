@@ -16,16 +16,16 @@
 </template>
 
 <script>
-import login from '@/components/login'
+import login from '@/components/login.vue'
 
 export default {
   name: 'app',
-
-  // ! fix login component
-  components: [login],
+  components: {
+    login
+  },
   data() {
     return {
-      loginPageVis: false, 
+      loginPageVis: false,
     }
   },
   methods: {
@@ -62,14 +62,5 @@ export default {
   .nav-login-wrapper a {
     margin: 0;
   }
-
-  .login-model-wrapper {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    background: red;
-}
 
 </style>
