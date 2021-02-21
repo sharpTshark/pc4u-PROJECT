@@ -34,13 +34,23 @@ app.post('/login', (req, res) => {
 	const email = req.body.email
 	const pass = req.body.pass
 
-	if (bcrypt.compareSync(pass, users.pass)) {
-		console.log('yup thats the right one')
-	}
+	const query = `SELECT * FROM users WHERE email='?';`
+	db.all(query, [email], (err, rows) => {
+		if (err) console.log(err)
+		else {
+			console.log(row)
+			console.log('no err')
+
+			// ! send back a token for one hour
+		}
+	})
+
+	// if (bcrypt.compareSync(pass, users.pass)) {
+	// 	console.log('yup thats the right one')
+	// }
 
 	console.log(email, pass)
 
-	// ! make database connection and a user table
 	// res.send({
 	// 	jwt: jwt.sign(
 	// 		{
@@ -82,5 +92,3 @@ app.post('/register', (req, res) => {
 app.get('/products', (req, res) => {
 	res.send('products')
 })
-
-console.log('works')
