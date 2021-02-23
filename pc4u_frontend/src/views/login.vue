@@ -25,19 +25,17 @@ export default {
     return {
       email: '',
       pass: '',
-      error: 'ssss'
+      error: ''
     }
   },
   methods: {
     login() {
-      axios.post(sep+'/login', { email: this.email, pass: this.pass })
+      axios.post(sep+'/user/login', { email: this.email, pass: this.pass })
       .then(res => {
-        if(!res.data.err) {
+        console.log(res);
+        if(res.data.jwt) {
           localStorage.setItem('jwt', res.data.jwt)
-        } else {
-          this.err = res.data.err
-        }
-
+        } else this.error = res.data.err
       })
       .catch(err => console.log(err))
     }
