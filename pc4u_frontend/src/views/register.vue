@@ -2,7 +2,7 @@
   <div class="register">
     <!-- login model -->
     <div class="register-model-wrapper">
-      <div class="register-input">
+      <div class="register-input" @keyup.enter="register()">
         <input v-model="email" type="text" name="email" placeholder="example@example.com">
         <input v-model="pass" type="password" name="pass" placeholder="password">
         <input v-model="pass2" type="password" name="pass2" placeholder="repeat-password">

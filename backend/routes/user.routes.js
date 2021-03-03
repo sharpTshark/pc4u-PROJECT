@@ -19,7 +19,10 @@ route.post('/login', (req, res) => {
 		if (err) console.log(err)
 		else if (rows.length == 1) {
 			if (bcrypt.compareSync(pass, rows[0].password)) {
-				res.send({ jwt: signJwt(rows[0].id), email: rows[0].email })
+				res.send({
+					jwt: signJwt({ userId: rows[0].id, admin: rows[0].admin }),
+					email: rows[0].email,
+				})
 			} else res.send({ err: 'Email or password is incorrect' })
 		} else res.send({ err: 'Email or password is incorrect' })
 	})
@@ -70,15 +73,25 @@ route.get('/profile/:token', async (req, res) => {
 	})
 })
 
+// * a admin endpoint
+// =======================================================================
+route.get('/admin/:token', async (req, res) => {
+	const token = req.params.token
+
+	await verifyJwt(token).then(result => {
+		if (result.valid) {
+			if (result.decoded.data.admin) {
+				// user query
+				const userQuery = `SELECT * FROM users;`
+				db.all(userQuery, [], (err, users) => {
+					if (err) console.log(err)
+					else {
+						res.send(users)
+					}
+				})
+			} else res.send({ res: result, err: 'unauthorized' })
+		} else res.send({ res: result, err: 'invalid' })
+	})
+})
+
 module.exports = route
-
-// orders query
-// const query = `SELECT * FROM orders WHERE userId=?;`
-
-// db.all(query, [rows[0].id], (err, rows) => {
-// 	if (err) console.log(err)
-// 	else {
-// 		response.push(rows[0])
-// 		res.send(response)
-// 	}
-// })
