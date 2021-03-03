@@ -19,7 +19,7 @@ route.post('/login', (req, res) => {
 		if (err) console.log(err)
 		else if (rows.length == 1) {
 			if (bcrypt.compareSync(pass, rows[0].password)) {
-				res.send({ jwt: signJwt(rows[0].id) })
+				res.send({ jwt: signJwt(rows[0].id), email: rows[0].email })
 			} else res.send({ err: 'Email or password is incorrect' })
 		} else res.send({ err: 'Email or password is incorrect' })
 	})
@@ -45,19 +45,25 @@ route.post('/register', (req, res) => {
 
 // * a profile endpoint
 // =======================================================================
-route.get('/check/:token', async (req, res) => {
+route.get('/profile/:token', async (req, res) => {
 	const token = req.params.token
 
 	await verifyJwt(token).then(result => {
 		if (result.valid) {
-			// ! dont need the password in the query / not save
 			// user query
 			const query = `SELECT id, email, verified, admin FROM users WHERE id=?;`
-
 			db.all(query, [result.decoded.data], (err, rows) => {
 				if (err) console.log(err)
 				else {
-					res.send(result)
+					// order query
+					const query2 = `SELECT * FROM orders WHERE userId=?;`
+					db.all(query2, [rows[0].id], (err, rrows) => {
+						res.send({
+							jwt: result,
+							user: rows[0],
+							orders: rrows,
+						})
+					})
 				}
 			})
 		} else res.send(result)

@@ -24,7 +24,7 @@
       <a>
         <router-link to="/profile">profile</router-link>
       </a>
-      <a @click="logout()">
+      <a @click="logout()" href="http://192.168.1.29:8080">
         logout
       </a>
     </div>
@@ -47,8 +47,8 @@
 
 <script>
 
-import sep from '@/SEP.js'
-import axios from 'axios'
+// import sep from '@/SEP.js'
+// import axios from 'axios'
 
 export default {
   name: 'app',
@@ -59,20 +59,22 @@ export default {
     }
   },
   mounted() {
-    axios.get(sep+'/user/check/'+localStorage.getItem('jwt'))
-    .then(res => {
-      console.log(res);
-      if (res.data.valid) {
-        this.loggedIn = true
-      }
-    })
-    .catch(err => console.log(err))
+
   },
   methods: {
     // * function 
     // ------------------------------------------------------------
     logout() {
       localStorage.clear('jwt')
+      this.$router.push({ name: 'Home' })
+    }
+  },
+  watch: {
+    $route() {
+      const jwt = localStorage.getItem('jwt')
+      const email = localStorage.getItem('email')
+      if (jwt && email) this.loggedIn = true, this.email = email
+      else this.loggedIn = false, this.email = ''
     }
   }
 }

@@ -2,7 +2,7 @@
   <div class="login">
     <!-- login model -->
     <div class="login-model-wrapper">
-      <div class="login-input">
+      <div class="login-input" @keyup.enter="login()">
         <input v-model="email" type="text" name="email" placeholder="example@example.com">
         <input v-model="pass" type="password" name="pass" placeholder="password">
         <button @click="login()">Login</button>
@@ -35,6 +35,8 @@ export default {
         console.log(res);
         if(res.data.jwt) {
           localStorage.setItem('jwt', res.data.jwt)
+          localStorage.setItem('email', res.data.email)
+          this.$router.push({ name: 'Home' })
         } else this.error = res.data.err
       })
       .catch(err => console.log(err))

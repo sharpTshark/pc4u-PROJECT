@@ -6,7 +6,7 @@
         <input v-model="email" type="text" name="email" placeholder="example@example.com">
         <input v-model="pass" type="password" name="pass" placeholder="password">
         <input v-model="pass2" type="password" name="pass2" placeholder="repeat-password">
-        <button @click="register()">Register</button>
+        <a @click="register()" href="http://192.168.1.29:8080">Register</a>
       </div>
       <div class="err-message">
         {{error}}
@@ -34,14 +34,11 @@ export default {
     register() {
       if (this.pass == this.pass2) {
         axios.post(sep+'/user/register', { email: this.email, pass: this.pass })
-        
         .then(res => {
-          console.log(res);
           if(res.data.succes) {
-            console.log('registerd');
+            this.$router.push({ name: 'login' })
           } else this.error = res.data.err
         })
-
         .catch(err => console.log(err))
 
       } else this.error = 'passwords are not the same'

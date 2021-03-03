@@ -18,10 +18,10 @@ export default {
         }
     },
     mounted() {
-        axios.get(sep+'/user/check/'+localStorage.getItem('jwt'))
+        axios.get(sep+'/user/profile/'+localStorage.getItem('jwt'))
         .then(res => {
             console.log(res);
-            this.userData = res.data[0]
+            this.userData = res.data
         })
         .catch(err => console.log(err))
     }
