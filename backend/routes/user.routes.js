@@ -3,7 +3,10 @@ const route = require('express').Router()
 const bcrypt = require('bcrypt')
 
 // jwt functions
-const signJwt = require('../jwtFunctions')
+const { verifyJwt, signJwt } = require('../jwtFunctions')
+
+// database
+const db = require('../database/start.database')
 
 // * a login endpoint
 // =======================================================================
@@ -16,7 +19,7 @@ route.post('/login', (req, res) => {
 		if (err) console.log(err)
 		else if (rows.length == 1) {
 			if (bcrypt.compareSync(pass, rows[0].password)) {
-				res.send({ jwt: signJwt(email) })
+				res.send({ jwt: signJwt(rows[0].id) })
 			} else res.send({ err: 'Email or password is incorrect' })
 		} else res.send({ err: 'Email or password is incorrect' })
 	})
@@ -40,4 +43,36 @@ route.post('/register', (req, res) => {
 	})
 })
 
+// * a profile endpoint
+// =======================================================================
+route.get('/check/:token', async (req, res) => {
+	const token = req.params.token
+
+	await verifyJwt(token).then(result => {
+		if (result.valid) {
+			// ! dont need the password in the query / not save
+			// user query
+			const query = `SELECT id, email, verified, admin FROM users WHERE id=?;`
+
+			db.all(query, [result.decoded.data], (err, rows) => {
+				if (err) console.log(err)
+				else {
+					res.send(result)
+				}
+			})
+		} else res.send(result)
+	})
+})
+
 module.exports = route
+
+// orders query
+// const query = `SELECT * FROM orders WHERE userId=?;`
+
+// db.all(query, [rows[0].id], (err, rows) => {
+// 	if (err) console.log(err)
+// 	else {
+// 		response.push(rows[0])
+// 		res.send(response)
+// 	}
+// })

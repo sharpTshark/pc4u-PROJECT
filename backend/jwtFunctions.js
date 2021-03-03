@@ -4,16 +4,18 @@ const jwt = require('jsonwebtoken')
 // secret
 const jwtSecret = 'dsawhkl909nwkwjknjfjhisa87hjbfetgbyhifs5yw82uujst'
 
-const verifyJwt = token => {
-	jwt.verify(token, jwtSecret, function (err, decoded) {
-		if (err) {
-			console.log(err)
-			return { valid: false, reason: 'expired' }
-		} else {
-			console.log(decoded)
-			return { valid: true, reason: '' }
-		}
+const verifyJwt = async token => {
+	const result = await new Promise((resolve, reject) => {
+		jwt.verify(token, jwtSecret, function (err, decoded) {
+			if (err) {
+				resolve({ valid: false, decoded: null, reason: 'expired' })
+			} else {
+				resolve({ valid: true, decoded: decoded, reason: '' })
+			}
+		})
 	})
+
+	return result
 }
 
 const signJwt = data => {

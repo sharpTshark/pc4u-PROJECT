@@ -5,11 +5,24 @@
 </template>
 
 <script>
+
+import sep from '@/SEP.js'
+import axios from 'axios'
+
 export default {
 	name: 'Home',
 	data() {
-		return {}
+		return {
+			products: []
+		}
 	},
+	mounted() {
+		axios.get(sep+'/shop/products')
+		.then(res => {
+			console.log(res);
+		})
+		.catch(err => console.log(err))
+	}
 }
 </script>
 
