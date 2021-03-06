@@ -1,13 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+// normall routes
 import Home from '../views/Home.vue'
 import login from '../views/login.vue'
 import register from '../views/register.vue'
-import profile from '../views/profile.vue'
-import admin from '../views/admin.vue'
 import About from '../views/About.vue'
 import contact from '../views/contact.vue'
 import productsPage from '../views/productPage.vue'
+
+// auth routes
+import profile from '../views/auth/profile.vue'
+import admin from '../views/auth/admin.vue'
 
 const routes = [
 	{
@@ -17,6 +20,11 @@ const routes = [
 	},
 	{
 		path: '/login',
+		name: 'login',
+		component: login,
+	},
+	{
+		path: '/login/:redirect?',
 		name: 'login',
 		component: login,
 	},

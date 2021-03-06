@@ -55,17 +55,15 @@ route.get('/profile/:token', async (req, res) => {
 		if (result.valid) {
 			// user query
 			const query = `SELECT id, email, verified, admin FROM users WHERE id=?;`
-			db.all(query, [result.decoded.data], (err, rows) => {
+			db.all(query, [result.decoded.data.userId], (err, rows) => {
 				if (err) console.log(err)
 				else {
+					result.user = rows[0]
 					// order query
 					const query2 = `SELECT * FROM orders WHERE userId=?;`
 					db.all(query2, [rows[0].id], (err, rrows) => {
-						res.send({
-							jwt: result,
-							user: rows[0],
-							orders: rrows,
-						})
+						result.orders = rrows
+						res.send(result)
 					})
 				}
 			})
@@ -86,11 +84,29 @@ route.get('/admin/:token', async (req, res) => {
 				db.all(userQuery, [], (err, users) => {
 					if (err) console.log(err)
 					else {
-						res.send(users)
+						const productQuery = `SELECT * FROM products;`
+						db.all(productQuery, [], (err, prod) => {
+							if (err) console.log(err)
+							else {
+								result.users = users
+								result.products = prod
+								result.err = false
+								result.admin = true
+								res.send(result)
+							}
+						})
 					}
 				})
-			} else res.send({ res: result, err: 'unauthorized' })
-		} else res.send({ res: result, err: 'invalid' })
+			} else {
+				result.err = 'unauthorized'
+				result.admin = false
+				res.send(result)
+			}
+		} else {
+			result.err = 'invalid'
+			result.admin = false
+			res.send(result)
+		}
 	})
 })
 

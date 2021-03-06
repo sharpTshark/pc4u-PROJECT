@@ -35,9 +35,11 @@ export default {
       .then(res => {
         console.log(res);
         if(res.data.jwt) {
-          localStorage.setItem('jwt', res.data.jwt)
-          localStorage.setItem('email', res.data.email)
-          this.$router.push({ name: 'Home' })
+          // set user info based on jwt token
+          localStorage.setItem('jwt', res.data.jwt), localStorage.setItem('email', res.data.email)
+          if (this.$route.params.redirect) {
+            this.$router.push({ name: this.$route.params.redirect })
+          } else this.$router.push({ name: 'Home' })
         } else this.error = res.data.err
       })
       .catch(err => console.log(err))
